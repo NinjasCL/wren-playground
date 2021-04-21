@@ -1,0 +1,18 @@
+{
+  "name": "wren-playground",
+  "productName": "WrenPlayground",
+  "version": "1.0.0",
+  "description": "Enables you to play with Wren",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Wren Playground Maintainers",
+    "email": "camilo@ninjas.cl",
+    "url": "https://github.com/ninjascl/wren-playground"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}
