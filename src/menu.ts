@@ -155,29 +155,23 @@ export default class MenuBuilder {
       label: 'Help',
       submenu: [
         {
-          label: 'Learn More',
+          label: 'Wren Homepage',
           click() {
-            shell.openExternal('https://electronjs.org');
+            shell.openExternal('https://wren.io');
           },
         },
         {
-          label: 'Documentation',
+          label: 'Wren Docs',
           click() {
             shell.openExternal(
-              'https://github.com/electron/electron/tree/master/docs#readme'
+              'https://wren.io/syntax.html'
             );
           },
         },
         {
-          label: 'Community Discussions',
+          label: 'Wren Discord',
           click() {
-            shell.openExternal('https://www.electronjs.org/community');
-          },
-        },
-        {
-          label: 'Search Issues',
-          click() {
-            shell.openExternal('https://github.com/electron/electron/issues');
+            shell.openExternal('https://discord.gg/ufsfZ5GkNy');
           },
         },
       ],
@@ -256,29 +250,23 @@ export default class MenuBuilder {
         label: 'Help',
         submenu: [
           {
-            label: 'Learn More',
+            label: 'Wren Homepage',
             click() {
-              shell.openExternal('https://electronjs.org');
+              shell.openExternal('https://wren.io');
             },
           },
           {
-            label: 'Documentation',
+            label: 'Wren Docs',
             click() {
               shell.openExternal(
-                'https://github.com/electron/electron/tree/master/docs#readme'
+                'https://wren.io/syntax.html'
               );
             },
           },
           {
-            label: 'Community Discussions',
+            label: 'Wren Discord',
             click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
+              shell.openExternal('https://discord.gg/ufsfZ5GkNy');
             },
           },
         ],
