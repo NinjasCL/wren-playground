@@ -151,6 +151,31 @@ export default class MenuBuilder {
         { label: 'Bring All to Front', selector: 'arrangeInFront:' },
       ],
     };
+    const subMenuHelp: MenuItemConstructorOptions = {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'Wren Homepage',
+          click() {
+            shell.openExternal('https://wren.io');
+          },
+        },
+        {
+          label: 'Wren Docs',
+          click() {
+            shell.openExternal(
+              'https://wren.io/syntax.html'
+            );
+          },
+        },
+        {
+          label: 'Wren Discord',
+          click() {
+            shell.openExternal('https://discord.gg/ufsfZ5GkNy');
+          },
+        },
+      ],
+    };
 
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
@@ -158,7 +183,7 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow];
+    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate() {
@@ -220,6 +245,31 @@ export default class MenuBuilder {
                   },
                 },
               ],
+      },
+      {
+        label: 'Help',
+        submenu: [
+          {
+            label: 'Wren Homepage',
+            click() {
+              shell.openExternal('https://wren.io');
+            },
+          },
+          {
+            label: 'Wren Docs',
+            click() {
+              shell.openExternal(
+                'https://wren.io/syntax.html'
+              );
+            },
+          },
+          {
+            label: 'Wren Discord',
+            click() {
+              shell.openExternal('https://discord.gg/ufsfZ5GkNy');
+            },
+          },
+        ],
       },
     ];
 
