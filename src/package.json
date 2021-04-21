@@ -1,6 +1,6 @@
 {
   "name": "wren-playground",
-  "productName": "WrenPlayground",
+  "productName": "Wren Playground",
   "version": "1.0.0",
   "description": "Enables you to play with Wren",
   "main": "./main.prod.js",

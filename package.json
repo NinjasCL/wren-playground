@@ -8,6 +8,8 @@
     "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.renderer.prod.babel.js",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
+    "format": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx --fix",
+    "icon": "cross-env NODE_ENV=development svg2png ./assets/wren.svg -o ./assets/wren.png --width=1024 --height=1024 && electron-icon-maker -i ./assets/wren.png -o ./assets/icons",
     "package": "rm -rf src/dist && yarn build && electron-builder build --publish never",
     "postinstall": "node -r @babel/register .erb/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.babel.js && opencollective-postinstall && yarn-deduplicate yarn.lock",
     "start": "node -r @babel/register ./.erb/scripts/CheckPortInUse.js && yarn start:renderer",
@@ -17,7 +19,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "cross-env NODE_ENV=development eslint --cache"
+      "cross-env NODE_ENV=development eslint --cache --fix"
     ],
     "{*.json,.{babelrc,eslintrc,prettierrc}}": [
       "prettier --ignore-path .eslintignore --parser json --write"
@@ -119,7 +121,8 @@
     "sass",
     "webpack",
     "hot",
-    "reload"
+    "reload",
+    "wren"
   ],
   "homepage": "https://github.com/NinjasCL/wren-playground#readme",
   "jest": {
@@ -199,6 +202,7 @@
     "electron": "^11.0.1",
     "electron-builder": "^22.10.5",
     "electron-devtools-installer": "^3.1.1",
+    "electron-icon-maker": "^0.0.5",
     "electron-notarize": "^1.0.0",
     "electron-rebuild": "^2.3.2",
     "enzyme": "^3.11.0",
@@ -232,6 +236,7 @@
     "rimraf": "^3.0.0",
     "sass-loader": "^10.1.0",
     "style-loader": "^2.0.0",
+    "svg2png": "^4.1.1",
     "terser-webpack-plugin": "^5.0.3",
     "typescript": "^4.0.5",
     "url-loader": "^4.1.0",
@@ -248,6 +253,7 @@
     "electron-is": "^3.0.0",
     "electron-is-packaged": "^1.0.2",
     "electron-log": "^4.2.4",
+    "electron-store": "^8.0.0",
     "electron-updater": "^4.3.4",
     "history": "^5.0.0",
     "prismjs": "^1.23.0",

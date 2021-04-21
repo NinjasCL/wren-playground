@@ -12,3 +12,12 @@ body {
   padding: 5%;
   color: #8fc13e;
 }
+
+.wren-error {
+  color: #fd8b19;
+}
+
+.wren-message {
+  font-size: large;
+  font-style: bold;
+}

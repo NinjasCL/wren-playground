@@ -163,15 +163,19 @@ export default class MenuBuilder {
         {
           label: 'Wren Docs',
           click() {
-            shell.openExternal(
-              'https://wren.io/syntax.html'
-            );
+            shell.openExternal('https://wren.io/syntax.html');
           },
         },
         {
           label: 'Wren Discord',
           click() {
             shell.openExternal('https://discord.gg/ufsfZ5GkNy');
+          },
+        },
+        {
+          label: 'Wren Wiki',
+          click() {
+            shell.openExternal('https://github.com/wren-lang/wren/wiki');
           },
         },
       ],
@@ -258,15 +262,19 @@ export default class MenuBuilder {
           {
             label: 'Wren Docs',
             click() {
-              shell.openExternal(
-                'https://wren.io/syntax.html'
-              );
+              shell.openExternal('https://wren.io/syntax.html');
             },
           },
           {
             label: 'Wren Discord',
             click() {
               shell.openExternal('https://discord.gg/ufsfZ5GkNy');
+            },
+          },
+          {
+            label: 'Wren Wiki',
+            click() {
+              shell.openExternal('https://github.com/wren-lang/wren/wiki');
             },
           },
         ],

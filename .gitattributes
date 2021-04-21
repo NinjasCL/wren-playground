@@ -10,4 +10,5 @@
 *.ttf   binary
 *.woff  binary
 *.woff2 binary
-wren_cli* binary
+wren_cli-linux binary
+wren_cli-macos binary
