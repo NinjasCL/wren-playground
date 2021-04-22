@@ -14,8 +14,10 @@ import Path from 'path';
 import Temp from 'temp';
 
 // External Components
-import CodeFlask from 'codeflask';
 import SplitPane from 'react-split-pane';
+
+// Using a custom version of codeflask to avoid some bugs
+import CodeFlask from './vendor/codeflask/src/codeflask';
 
 // CSS
 import './App.global.css';
@@ -32,7 +34,7 @@ const getAssetPath = (...paths: string[]): string => {
   return Path.join(RESOURCES_PATH, ...paths);
 };
 
-const beautify = (message: any) => {
+const beautifyError = (message: any) => {
   const content = message.toString().split('\n');
 
   // Look for info inside the error message from the cli
@@ -55,7 +57,7 @@ const beautify = (message: any) => {
 
   if (errors.length === 0) {
     return (
-      <div className="wren-message">
+      <div className="wren-error">
         <p>{message.toString()}</p>
       </div>
     );
@@ -72,6 +74,59 @@ const beautify = (message: any) => {
     </div>
   ));
 };
+
+const beautifyMessages = (messages: string[]) => (
+  <div className="wren-messages">
+    {messages.map((message: string, index: number) => {
+      // Transform newlines to <br/>
+      if (message.indexOf('\n') > 0) {
+        return (
+          // eslint-disable-next-line react/no-array-index-key
+          <p key={index}>
+            {message.split('\n').map((item: string, key: number) => {
+              // Transform tabs to &nbsp;
+              if (item.indexOf('\t') > 0) {
+                return (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <span key={key}>
+                    {item.split('\t').map((msg, id) => {
+                      // eslint-disable-next-line react/no-array-index-key
+                      return <span key={id}>{msg}&nbsp;&nbsp;</span>;
+                    })}
+                    <br />
+                  </span>
+                );
+              }
+
+              return (
+                // eslint-disable-next-line react/no-array-index-key
+                <span key={key}>
+                  {item}
+                  <br />
+                </span>
+              );
+            })}
+          </p>
+        );
+      }
+
+      // Transform tabs to &nbsp;
+      if (message.indexOf('\t') > 0) {
+        return (
+          // eslint-disable-next-line react/no-array-index-key
+          <span key={index}>
+            {message.split('\t').map((msg, id) => {
+              // eslint-disable-next-line react/no-array-index-key
+              return <span key={id}>{msg}&nbsp;&nbsp;</span>;
+            })}
+          </span>
+        );
+      }
+      // eslint-disable-next-line react/no-array-index-key
+      return <p key={index}>{message}</p>;
+    })}
+  </div>
+);
 
 // Callback executed on every keystroke
 Temp.track();
@@ -91,15 +146,18 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   const child = Process.spawn(cmd, [stream.path]);
 
   child.on('error', (err) => {
-    setPreview(beautify(err || ''));
+    setPreview(<div className="wren-critical">{err.toString()}</div>);
   });
 
+  const messages: string[] = [];
+
   child.stdout.on('data', (message) => {
-    setPreview(beautify(message || ''));
+    messages.push(message.toString());
+    setPreview(beautifyMessages(messages));
   });
 
   child.stderr.on('data', (message) => {
-    setPreview(beautify(message || ''));
+    setPreview(beautifyError(message || ''));
   });
 
   child.on('close', () => {
@@ -111,7 +169,7 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
 
 const Main = () => {
   const [preview, setPreview] = useState('');
-  const [, /* editor */ setEditor] = useState(null);
+  // const [editor, setEditor] = useState(null); // saved for future use maybe
   const [isSetupDone, setIsSetupDone] = useState(false);
 
   const editorRef = useRef(null);
@@ -120,7 +178,7 @@ const Main = () => {
     if (editorRef && !isSetupDone) {
       const options = {
         lineNumbers: true,
-        language: 'js',
+        language: 'wren',
         defaultTheme: true,
       };
 
@@ -139,10 +197,16 @@ const Main = () => {
         flask.updateCode(code);
       }
 
-      setEditor(flask);
+      // setEditor(flask);
       setIsSetupDone(true);
     }
-  }, [editorRef, isSetupDone, setIsSetupDone, setEditor, preview, setPreview]);
+  }, [
+    editorRef,
+    isSetupDone,
+    setIsSetupDone,
+    /* setEditor, */ preview,
+    setPreview,
+  ]);
 
   return (
     <div className="App">

@@ -17,7 +17,11 @@ body {
   color: #fd8b19;
 }
 
-.wren-message {
+.wren-messages {
   font-size: large;
   font-style: bold;
+}
+
+.wren-critical {
+  color: #ef3b7d;
 }

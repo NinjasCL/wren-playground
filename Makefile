@@ -1,4 +1,4 @@
-.PHONY: start package lint format icon
+.PHONY: start package lint format icon test
 
 s r start run:
 	yarn start
@@ -14,3 +14,6 @@ f format:
 
 icon:
 	yarn icon
+
+t test:
+	yarn test
