@@ -78,6 +78,7 @@ const createWindow = async () => {
     webPreferences: {
       nodeIntegration: true,
     },
+    titleBarStyle: 'hidden'
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
