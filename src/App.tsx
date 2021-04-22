@@ -17,7 +17,7 @@ import Temp from 'temp';
 import SplitPane from 'react-split-pane';
 
 // Using a custom version of codeflask to avoid some bugs
-import CodeFlask from './vendor/codeflask/src/codeflask';
+import CodeFlask from './vendor/codeflask';
 
 // CSS
 import './App.global.css';
