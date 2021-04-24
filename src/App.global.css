@@ -2,10 +2,13 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+@import url('./vendor/prism/prism.css');
 
 body {
   color: #b9b5b8;
   background: #2b2b2b;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  /* font-size: 1em; */
 }
 
 #preview-pane {
@@ -25,3 +28,16 @@ body {
 .wren-critical {
   color: #ef3b7d;
 }
+
+/* .code-editor {
+  border-radius: 6px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+  font-family: 'Source Code Pro', monospace;
+  font-size: 14px;
+  font-weight: 400;
+  height: 340px;
+  letter-spacing: normal;
+  line-height: 20px;
+  padding: 10px;
+  tab-size: 4;
+} */

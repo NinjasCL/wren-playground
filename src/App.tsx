@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 // React
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -16,11 +17,14 @@ import Temp from 'temp';
 // External Components
 import SplitPane from 'react-split-pane';
 
-// Using a custom version of codeflask to avoid some bugs
-import CodeFlask from './vendor/codeflask';
-
 // CSS
 import './App.global.css';
+
+import { CodeJar } from 'codejar';
+import { withLineNumbers } from 'codejar/linenumbers';
+
+// import Prism from 'prismjs';
+import Prism from './vendor/prism/prism';
 
 // MARK: App
 const STORAGE_KEY = 'code';
@@ -177,27 +181,30 @@ const Main = () => {
   useEffect(() => {
     if (editorRef && !isSetupDone) {
       const options = {
-        lineNumbers: true,
-        language: 'wren',
-        defaultTheme: true,
+        tab: ' '.repeat(2),
       };
 
       const storage = new Store();
 
-      const flask = new CodeFlask(editorRef.current, options);
+      const codeEditor = CodeJar(
+        // eslint-disable-next-line
+        editorRef.current,
+        withLineNumbers(Prism.highlightElement),
+        options
+      );
 
-      flask.updateCode(`System.print("Hello Wren")`);
+      codeEditor.updateCode(`System.print("Hello Wren")`);
 
-      flask.onUpdate((value: any) => {
+      codeEditor.onUpdate((value: any) => {
         onChange(value, preview, setPreview, storage);
       });
 
-      const code = storage.get(STORAGE_KEY);
+      const code: any = storage.get(STORAGE_KEY);
       if (code) {
-        flask.updateCode(code);
+        codeEditor.updateCode(code);
       }
 
-      // setEditor(flask);
+      // setEditor(codeEditor);
       setIsSetupDone(true);
     }
   }, [
@@ -211,9 +218,7 @@ const Main = () => {
   return (
     <div className="App">
       <SplitPane split="vertical" defaultSize="60%">
-        <div id="editor-pane">
-          <div id="code-editor" ref={editorRef} />
-        </div>
+        <div id="code-editor" ref={editorRef} className="language-wren" />
         <div id="preview-pane">{preview}</div>
       </SplitPane>
     </div>

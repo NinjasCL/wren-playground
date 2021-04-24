@@ -1,3 +1,4 @@
 declare module 'temp';
-declare module 'codeflask';
+declare module 'codejar';
+declare module 'prismjs';
 declare module 'electron-is-packaged';
