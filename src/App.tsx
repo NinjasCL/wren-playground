@@ -17,14 +17,14 @@ import Temp from 'temp';
 // External Components
 import SplitPane from 'react-split-pane';
 
-// CSS
-import './App.global.css';
-
 import { CodeJar } from 'codejar';
 import { withLineNumbers } from 'codejar/linenumbers';
 
-// import Prism from 'prismjs';
+// custom prism version
 import Prism from './vendor/prism/prism';
+
+// CSS
+import './App.global.css';
 
 // MARK: App
 const STORAGE_KEY = 'code';
@@ -42,7 +42,7 @@ const beautifyError = (message: any) => {
   const content = message.toString().split('\n');
 
   // Look for info inside the error message from the cli
-  const regex = /[\s\S]+line[\s\S]*([0-9])\]\s*([\S\s]+):([\S\s]*)/gimu;
+  const regex = /[\s\S]+line[\s\S]*([0-9]+)\]\s*([\S\s]+):([\S\s]*)/gimu;
   const errors: any = [];
 
   content.forEach((item: any) => {
@@ -53,6 +53,7 @@ const beautifyError = (message: any) => {
         line: matches[1],
         context: matches[2],
         message: matches[3],
+        raw: message.toString(),
       };
 
       errors.push(error);
@@ -148,6 +149,9 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   storage.set(STORAGE_KEY, content);
 
   const child = Process.spawn(cmd, [stream.path]);
+
+  // Clean previous result
+  setPreview('');
 
   child.on('error', (err) => {
     setPreview(<div className="wren-critical">{err.toString()}</div>);
