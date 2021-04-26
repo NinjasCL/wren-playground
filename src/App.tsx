@@ -141,27 +141,58 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   let cmd = getAssetPath('wren_cli-linux');
   if (Is.macOS()) {
     cmd = getAssetPath('wren_cli-macos');
+    Log.info('Using MacOS');
   } else if (Is.windows()) {
     cmd = getAssetPath('wren_cli-windows.exe');
+    Log.info('Using Windows');
+  } else {
+    Log.info('Using Linux');
   }
 
+  Log.info('Stream Created');
   const stream = Temp.createWriteStream();
 
   // Replace !/ and ~/ for fullpaths to allow using included libraries
+  const userData = storage.path.replace('config.json', '');
+
   const content = value
     .toString()
+    // Import from internal libs
     .replaceAll(
       `import "!/`,
       `import "${Path.relative(stream.path, Path.join(RESOURCES_PATH, 'lib'))}${
         Path.sep
       }`
     )
+    // Import from home dir
     .replaceAll(
       `import "~/`,
       `import "${Path.relative(stream.path, OS.homedir())}${Path.sep}`
+    )
+    // Import from user data
+    .replaceAll(
+      `import "$/`,
+      `import "${Path.relative(stream.path, userData)}${Path.sep}`
     );
 
-  Log.debug(content);
+  Log.info('Evaluating Content');
+
+  const debugLog = {
+    tempFile: stream.path,
+    resources: RESOURCES_PATH,
+    home: OS.homedir(),
+    userData,
+    content,
+    raw: value.toString(),
+    cache: storage.path,
+    wren: cmd,
+    run: `"${cmd}" "${stream.path}"`,
+  };
+
+  Log.info(debugLog.run);
+
+  // eslint-disable-next-line no-console
+  console.table(debugLog);
 
   stream.write(content);
   storage.set(STORAGE_KEY, value.toString());
@@ -172,22 +203,28 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   setPreview('');
 
   child.on('error', (err) => {
+    Log.info('Received Critical Error');
+    Log.error(err.toString());
     setPreview(<div className="wren-critical">{err.toString()}</div>);
   });
 
   const messages: string[] = [];
 
   child.stdout.on('data', (message) => {
+    Log.info('Received Data');
+    Log.debug(message.toString());
     messages.push(message.toString());
     setPreview(beautifyMessages(messages));
   });
 
   child.stderr.on('data', (message) => {
+    Log.info('Received Error');
     Log.debug(message.toString());
     setPreview(beautifyError(message || ''));
   });
 
   child.on('close', () => {
+    Log.info('Stream Closed');
     stream.end();
   });
 };
@@ -248,7 +285,7 @@ const Main = () => {
   );
 };
 
-export default function App() {
+export default function Application() {
   return (
     <Router>
       <Switch>

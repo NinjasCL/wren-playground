@@ -23,6 +23,7 @@ Store.initRenderer();
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
+    log.transports.console.level = 'debug';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
