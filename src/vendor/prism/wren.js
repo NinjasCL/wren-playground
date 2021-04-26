@@ -84,7 +84,7 @@ export default (function (Prism) {
           }
       ],
       'punctuation': /[\[\](){},;]|\.+|:+/,
-      'variable': /[a-zA-Z_]\w*(?:[?!]|\b)/,
+      'variable': /[a-zA-Z_]\w*(?:[]|\b)/,
   };
 
   var stringInside = {

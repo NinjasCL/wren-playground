@@ -200,7 +200,9 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   const child = Process.spawn(cmd, [stream.path]);
 
   // Clean previous result
-  setPreview('');
+  // TODO: Maybe debounce cleaning a bit
+  // TODO: Add CTRL+R to Run and CTRL+S to save keybindings
+  // setPreview('');
 
   child.on('error', (err) => {
     Log.info('Received Critical Error');
