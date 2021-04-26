@@ -54,17 +54,21 @@ export default (function (Prism) {
 
       // Attributes are special keywords to add meta data to classes
       'attribute': [
-         // #! attributes are stored in class properties
-         // #!myvar = true
+          // #! attributes are stored in class properties
+          // #!myvar = true
+          // #attributes are not stored and dismissed at compilation
           {
-            pattern: /^#!.*/,
-            alias: 'variable'
-          },
-          // # attributes are not stored and dismissed at compilation
-          {
-              pattern: /^#.*/,
+              pattern: /#!?[ \t\u3000]*[A-Za-z_\d]+\b/u,
               alias: 'keyword'
           },
+      ],
+      // #!/usr/bin/env wren on the first line
+      'hashbang': [
+        {
+          pattern: /#!\/[\S \t\u3000]+/u,
+          greedy:true,
+          alias:'constant'
+        }
       ],
       'class-name': [
           {
@@ -88,18 +92,17 @@ export default (function (Prism) {
       ],
 
       // A constant can be a variable, class, property or method. Just named in all uppercase letters
-      'constant': /\b[A-Z](?:[A-Z_]|\dx?)*\b/,
+      'constant': /\b[A-Z][A-Z\d_]*\b/,
 
       'keyword': /\b(?:if|else|while|for|return|in|is|as|null|break|continue|foreign|construct|static|var|class|this|super|#!|#|import)\b/,
 
       // Functions can be Class.method()
-      // But also var function = Fn.new {|param1, param2| mycode }
       'function': /(?!\d)\w+(?=\s*(?:[({]))/,
 
       // Traditional operators but adding .. and ... for Ranges e.g.: 1..2
       // Based on prism-lua.js
       'operator': [
-          /[-+*%^&|#]|\/\/?|<[<=]?|>[>=]?|[=~]=?/,
+          /[-+*%^&|]|\/\/?|<[<=]?|>[>=]?|[=~]=?/,
           {
               // Match ".." but don't break "..."
               pattern: /(^|[^.])\.\.(?!\.)/,
@@ -108,7 +111,7 @@ export default (function (Prism) {
       ],
       // Traditional punctuation although ; is not used in Wren
       'punctuation': /[\[\](){},;]|\.+|:+/,
-      'variable': /[a-zA-Z_]\w*\b/,
+      'variable': /[a-zA-Z_\d]\w*\b/,
   };
 
   // Based on prism-javascript.js interpolation

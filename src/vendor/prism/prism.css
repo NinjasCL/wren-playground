@@ -98,9 +98,12 @@ https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+clike+ja
 
  .token.atrule,
  .token.attr-value,
- .token.function,
- .token.class-name {
+ .token.function {
    color: #e6db74;
+ }
+
+ .token.class-name {
+   color: #fd8b19;
  }
 
  .token.keyword {
