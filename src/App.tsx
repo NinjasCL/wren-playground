@@ -8,11 +8,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Is from 'electron-is';
 import Store from 'electron-store';
 import { isPackaged } from 'electron-is-packaged';
+import Log from 'electron-log';
 
 // NodeJS
 import Process from 'child_process';
 import Path from 'path';
 import Temp from 'temp';
+import OS from 'os';
 
 // External Components
 import SplitPane from 'react-split-pane';
@@ -144,9 +146,25 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   }
 
   const stream = Temp.createWriteStream();
-  const content = value.toString();
+
+  // Replace !/ and ~/ for fullpaths to allow using included libraries
+  const content = value
+    .toString()
+    .replaceAll(
+      `import "!/`,
+      `import "${Path.relative(stream.path, Path.join(RESOURCES_PATH, 'lib'))}${
+        Path.sep
+      }`
+    )
+    .replaceAll(
+      `import "~/`,
+      `import "${Path.relative(stream.path, OS.homedir())}${Path.sep}`
+    );
+
+  Log.debug(content);
+
   stream.write(content);
-  storage.set(STORAGE_KEY, content);
+  storage.set(STORAGE_KEY, value.toString());
 
   const child = Process.spawn(cmd, [stream.path]);
 
@@ -165,6 +183,7 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   });
 
   child.stderr.on('data', (message) => {
+    Log.debug(message.toString());
     setPreview(beautifyError(message || ''));
   });
 
