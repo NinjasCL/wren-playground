@@ -178,6 +178,12 @@ export default class MenuBuilder {
             shell.openExternal('https://github.com/wren-lang/wren/wiki');
           },
         },
+        {
+          label: 'Wren Rosetta',
+          click() {
+            shell.openExternal('https://rosettacode.org/wiki/Category:Wren');
+          },
+        },
       ],
     };
 
@@ -275,6 +281,12 @@ export default class MenuBuilder {
             label: 'Wren Wiki',
             click() {
               shell.openExternal('https://github.com/wren-lang/wren/wiki');
+            },
+          },
+          {
+            label: 'Wren Rosetta',
+            click() {
+              shell.openExternal('https://rosettacode.org/wiki/Category:Wren');
             },
           },
         ],

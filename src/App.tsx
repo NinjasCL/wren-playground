@@ -15,14 +15,16 @@ import Process from 'child_process';
 import Path from 'path';
 import Temp from 'temp';
 import OS from 'os';
+import File from 'fs';
 
 // External Components
 import SplitPane from 'react-split-pane';
 
 import { CodeJar } from 'codejar';
 import { withLineNumbers } from 'codejar/linenumbers';
+import debounce from 'lodash/Debounce';
 
-// custom prism version
+// Custom prism version
 import Prism from './vendor/prism/prism';
 
 // CSS
@@ -138,23 +140,13 @@ const beautifyMessages = (messages: string[]) => (
 // Callback executed on every keystroke
 Temp.track();
 const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
-  let cmd = getAssetPath('wren_cli-linux');
-  if (Is.macOS()) {
-    cmd = getAssetPath('wren_cli-macos');
-    Log.info('Using MacOS');
-  } else if (Is.windows()) {
-    cmd = getAssetPath('wren_cli-windows.exe');
-    Log.info('Using Windows');
-  } else {
-    Log.info('Using Linux');
-  }
+  const userData = storage.get('userData');
+  const cmd = storage.get('cmd');
 
   Log.info('Stream Created');
   const stream = Temp.createWriteStream();
 
   // Replace !/ and ~/ for fullpaths to allow using included libraries
-  const userData = storage.path.replace('config.json', '');
-
   const content = value
     .toString()
     // Import from internal libs
@@ -166,8 +158,15 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
     )
     // Import from home dir
     .replaceAll(
-      `import "~/`,
+      `import "#/`,
       `import "${Path.relative(stream.path, OS.homedir())}${Path.sep}`
+    )
+    // Import from .wren dir
+    .replaceAll(
+      `import "~/`,
+      `import "${Path.relative(stream.path, OS.homedir())}${Path.sep}.wren${
+        Path.sep
+      }`
     )
     // Import from user data
     .replaceAll(
@@ -200,9 +199,10 @@ const onChange = (value: any, _preview: any, setPreview: any, storage: any) => {
   const child = Process.spawn(cmd, [stream.path]);
 
   // Clean previous result
-  // TODO: Maybe debounce cleaning a bit
   // TODO: Add CTRL+R to Run and CTRL+S to save keybindings
-  // setPreview('');
+  debounce(() => {
+    setPreview('');
+  }, 20);
 
   child.on('error', (err) => {
     Log.info('Received Critical Error');
@@ -248,8 +248,42 @@ const Main = () => {
 
       const storage = new Store();
 
+      const userData = storage.path.replace('config.json', '');
+      storage.set('userData', userData);
+
+      let cmd = getAssetPath('wren_cli-linux');
+
+      // Enable providing a custom wren executable in userData dir
+      let customWren = Path.join(userData, 'wren');
+      if (Is.windows()) {
+        customWren = Path.join(userData, 'wren.exe');
+      }
+
+      // If not found in userData check .wren home
+      if (!File.existsSync(customWren)) {
+        customWren = Path.join(OS.homedir(), '.wren', 'wren');
+        if (Is.windows()) {
+          customWren = Path.join(OS.homedir(), '.wren', 'wren.exe');
+        }
+      }
+
+      if (File.existsSync(customWren)) {
+        Log.info('Using Custom Wren');
+        cmd = customWren;
+      } else if (Is.macOS()) {
+        cmd = getAssetPath('wren_cli-macos');
+        Log.info('Using MacOS');
+      } else if (Is.windows()) {
+        cmd = getAssetPath('wren_cli-windows.exe');
+        Log.info('Using Windows');
+      } else {
+        Log.info('Using Linux');
+      }
+
+      Log.info(cmd);
+      storage.set('cmd', cmd);
+
       const codeEditor = CodeJar(
-        // eslint-disable-next-line
         editorRef.current,
         withLineNumbers(Prism.highlightElement),
         options
