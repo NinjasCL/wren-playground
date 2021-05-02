@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Temp from 'temp';
-import Process from 'child_process';
 import Path from 'path';
-import File from 'fs';
 
-import debounce from 'lodash/Debounce';
 import Log from 'electron-log';
 import OS from 'os';
+import Process from 'child_process';
+import * as _ from 'lodash';
 
 import { RESOURCES_PATH } from '../helpers/assets';
 import {
@@ -22,10 +21,12 @@ Temp.track();
 
 const childs: any = [];
 
-const onChange = (
+const kill = (child: any) => child.kill('SIGKILL');
+
+const onChange = async (
   value: any,
   storage: any,
-  { setPreview, setPreviewOK, setPreviewError, setPreviewCritical }: any
+  { setPreviewOK, setPreviewError }: any
 ) => {
   const userData = storage.get(STORAGE_UDATA);
   const cmd = storage.get(STORAGE_CLI);
@@ -94,7 +95,7 @@ const onChange = (
   // Kill previous childs
   childs.forEach((cid: any, index: number) => {
     Log.debug(`Killing ${cid.pid}`);
-    cid.kill('SIGINT');
+    kill(cid);
     delete childs[index];
   });
 
@@ -106,22 +107,25 @@ const onChange = (
   childs.push(child);
 
   // Set seconds max execution time
+  // Protection from while(true)
   setTimeout(() => {
-    Log.info('Child timeout reached');
-    child.kill();
+    Log.info(`Child ${child.pid} timeout reached`);
+    kill(child);
+    stream.close();
   }, storage.get(STORAGE_MAX_TIME));
 
   // Clean previous result
   // Add a little delay to avoid cleaning up too soon
-  debounce(() => {
-    setPreview('');
+  _.debounce(() => {
+    Log.info('Debounced Cleanup');
+    setPreviewOK(['']);
   }, 20);
 
   child.on('error', (err) => {
     Log.info('Received Critical Error');
     Log.error(err.toString());
-    setPreviewCritical(err.toString());
-    child.kill();
+    setPreviewError(err.toString());
+    kill(child);
   });
 
   child.stdout.on('data', (message) => {
@@ -134,7 +138,7 @@ const onChange = (
     Log.info('Received Error');
     Log.debug(message.toString());
     setPreviewError(message.toString());
-    child.kill();
+    kill(child);
   });
 
   child.on('close', () => {

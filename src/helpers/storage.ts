@@ -52,6 +52,7 @@ const getCustomWren = (
     }
   }
 
+  // TODO: Evaluate if this is desired
   // Check in /usr/local/wren/bin
   // if (!File.existsSync(customWren)) {
   //   customWren = Path.join(localWren, 'wren');

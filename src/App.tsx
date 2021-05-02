@@ -49,17 +49,14 @@ const Main = () => {
 
       codeEditor.updateCode(`System.print("Hello Wren")`);
 
-      codeEditor.onUpdate((value: any) => {
+      codeEditor.onUpdate((value: any) =>
         onChange(value, storage, {
-          setPreview,
           setPreviewOK: (values: string[]) =>
             setPreview(WrenCLI.WrenCLIOut(values)),
           setPreviewError: (message: string) =>
             setPreview(WrenCLI.WrenCLIError(message)),
-          setPreviewCritical: (message: string) =>
-            setPreview(WrenCLI.WrenCLICritical(message)),
-        });
-      });
+        })
+      );
 
       const code: any = storage.get(STORAGE_CODE);
       if (code) {
