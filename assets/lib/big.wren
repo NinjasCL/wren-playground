@@ -1,3 +1,10 @@
+// url: https://rosettacode.org/wiki/Category:Wren-big
+// source: https://rosettacode.org/mw/index.php?title=Category_talk:Wren-big&action=edit&section=2
+// file: big
+// name: Wren-big
+// author: PureFox
+// license: MIT
+
 /* Module "big.wren" */
 
 import "./trait" for Comparable

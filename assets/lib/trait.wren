@@ -4,6 +4,7 @@
 // name: Wren-trait
 // author: PureFox
 // license: MIT
+
 /* Module "trait.wren" */
 
 /* Cloneable is an abstract class which enables child classes to automatically be

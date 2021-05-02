@@ -6,7 +6,6 @@ import Path from 'path';
 import Log from 'electron-log';
 import OS from 'os';
 import Process from 'child_process';
-import * as _ from 'lodash';
 
 import { RESOURCES_PATH } from '../helpers/assets';
 import {
@@ -50,7 +49,7 @@ const onChange = async (
       `import "${Path.relative(stream.path, OS.homedir())}${Path.sep}`
     )
     .replaceAll(
-      `\${~}`,
+      `%{~}`,
       `${Path.relative(stream.path, OS.homedir())}${Path.sep}`
     )
     // Import from .wren dir
@@ -61,14 +60,18 @@ const onChange = async (
       }`
     )
     .replaceAll(
-      `\${#}`,
+      `%{#}`,
       `${Path.relative(stream.path, OS.homedir())}${Path.sep}.wren${Path.sep}`
     )
     // Import from user data
     .replaceAll(
       `import "$`,
       `import "${Path.relative(stream.path, userData)}${Path.sep}`
-    );
+    )
+    // Add unix for current timestamp in milliseconds
+    .replaceAll(`%{date.unix}`, Date.now())
+    // Add iso for current date
+    .replaceAll(`%{date.iso}`, new Date().toISOString());
 
   Log.info('Evaluating Content');
 
@@ -114,22 +117,17 @@ const onChange = async (
     stream.close();
   }, storage.get(STORAGE_MAX_TIME));
 
-  // Clean previous result
-  // Add a little delay to avoid cleaning up too soon
-  _.debounce(() => {
-    Log.info('Debounced Cleanup');
-    setPreviewOK(['']);
-  }, 20);
-
   child.on('error', (err) => {
     Log.info('Received Critical Error');
     Log.error(err.toString());
+    setPreviewOK(['']);
     setPreviewError(err.toString());
     kill(child);
   });
 
   child.stdout.on('data', (message) => {
     Log.info('Received Data');
+    setPreviewOK(['']);
     Log.debug(message.toString());
     setPreviewOK([message.toString()]);
   });
@@ -137,6 +135,7 @@ const onChange = async (
   child.stderr.on('data', (message) => {
     Log.info('Received Error');
     Log.debug(message.toString());
+    setPreviewOK(['']);
     setPreviewError(message.toString());
     kill(child);
   });
