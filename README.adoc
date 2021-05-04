@@ -6,7 +6,7 @@
 
 A simple playground for playing with https://wren.io[Wren]
 
-video:https://user-images.githubusercontent.com/292738/117061815-a11b9500-acf0-11eb-9361-ec8c5704766a.mp4[]
+image:https://user-images.githubusercontent.com/292738/117061815-a11b9500-acf0-11eb-9361-ec8c5704766a.mp4[]
 
 ## Components
 
