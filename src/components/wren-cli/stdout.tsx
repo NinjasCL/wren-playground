@@ -1,23 +1,21 @@
 import React from 'react';
+import { v4 as Uuid } from 'uuid';
 
 export default function beautifyMessages(messages: string[]) {
   return (
     <div className="wren-messages">
-      {messages.map((message: string, index: number) => {
+      {messages.map((message: string) => {
         // Transform newlines to <br/>
         if (message.indexOf('\n') > 0) {
           return (
-            // eslint-disable-next-line react/no-array-index-key
-            <p key={index}>
-              {message.split('\n').map((item: string, key: number) => {
+            <p key={Uuid()}>
+              {message.split('\n').map((item: string) => {
                 // Transform tabs to &nbsp;
                 if (item.indexOf('\t') > 0) {
                   return (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <span key={key}>
-                      {item.split('\t').map((msg, id) => {
-                        // eslint-disable-next-line react/no-array-index-key
-                        return <span key={id}>{msg}&nbsp;&nbsp;</span>;
+                    <span key={Uuid()}>
+                      {item.split('\t').map((msg) => {
+                        return <span key={Uuid()}>{msg}&nbsp;&nbsp;</span>;
                       })}
                       <br />
                     </span>
@@ -25,8 +23,7 @@ export default function beautifyMessages(messages: string[]) {
                 }
 
                 return (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <span key={key}>
+                  <span key={Uuid()}>
                     {item}
                     <br />
                   </span>
@@ -39,17 +36,14 @@ export default function beautifyMessages(messages: string[]) {
         // Transform tabs to &nbsp;
         if (message.indexOf('\t') > 0) {
           return (
-            // eslint-disable-next-line react/no-array-index-key
-            <span key={index}>
-              {message.split('\t').map((msg, id) => {
-                // eslint-disable-next-line react/no-array-index-key
-                return <span key={id}>{msg}&nbsp;&nbsp;</span>;
+            <span key={Uuid()}>
+              {message.split('\t').map((msg) => {
+                return <span key={Uuid()}>{msg}&nbsp;&nbsp;</span>;
               })}
             </span>
           );
         }
-        // eslint-disable-next-line react/no-array-index-key
-        return <p key={index}>{message}</p>;
+        return <p key={Uuid()}>{message}</p>;
       })}
     </div>
   );

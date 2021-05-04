@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
+import { v4 as Uuid } from 'uuid';
 
 export default function beautifyError(message: any) {
   const content = message.toString().split('\n');
@@ -32,7 +33,7 @@ export default function beautifyError(message: any) {
   }
 
   return errors.map((error: any, index: number) => (
-    <div className="wren-error" key={JSON.stringify(error)}>
+    <div className="wren-error" key={Uuid()}>
       <h3>Error {index}</h3>
       <ul>
         <li>line: {error.line}</li>

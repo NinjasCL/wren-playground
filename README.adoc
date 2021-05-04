@@ -6,7 +6,61 @@
 
 A simple playground for playing with https://wren.io[Wren]
 
-image:https://user-images.githubusercontent.com/292738/115530405-bc52c300-a261-11eb-99e3-49502dcf5444.png[Wren Playground]
+image::screenshot.gif[Screenshot]
+
+## Components
+
+### Imports
+
+- `import "!{{module}}`" for Module`: Imports from built-in modules.
+- `import "~{{module}}" for Module`: Imports from `HOME` directory.
+- `import "#{{module}}" for Module`: Imports from `.wren` directory.
+
+### Constants
+
+There are a few constants:
+
+- `%{date.iso}`: Returns the current ISO 8601 date
+- `%{date.unix}`: Returns the unix timestamp in milliseconds
+- `%{~}`: Returns the path to user's `HOME` directory
+- `%{#}`: Returns the path to `.wren` directory
+
+### Modules
+
+Modules from https://rosettacode.org/wiki/Category:Wren[Rosetta Wren] have been built-in
+to complement _Wren CLI_ standard modules. Import them using `!{{module name}}`.
+Example `import "!fmt" for Fmt`
+
+- fmt
+- str
+- sort
+- math
+- trait
+- seq
+- date
+- rat
+- pattern
+- big
+- upc
+- matrix
+- set
+- llist
+- queue
+- complex
+- dynamic
+- ioutil
+- long
+
+### Custom Wren CLI
+
+You can override the custom `wren_cli` used. Just put a `wren` or `wren.exe` in your `.wren` directory.
+
+### .wren directory
+
+Is a directory where you can store a custom `wren_cli` or scripts.
+Normally is located in `HOME`. `~/.wren`.
+
+Example: `/Users/clsource/.wren`
 
 ## 📘 LICENSE
 MIT
@@ -20,3 +74,4 @@ MIT
     Ninjas.cl
   </a>.
 </p>
+++++

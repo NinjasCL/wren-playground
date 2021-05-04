@@ -6,6 +6,7 @@ import Path from 'path';
 import Log from 'electron-log';
 import OS from 'os';
 import Process from 'child_process';
+import * as _ from 'lodash';
 
 import { RESOURCES_PATH } from '../helpers/assets';
 import {
@@ -20,7 +21,10 @@ Temp.track();
 
 const childs: any = [];
 
-const kill = (child: any) => child.kill('SIGKILL');
+const kill = (child: any) => {
+  Log.info(`Killing child ${child.pid}`);
+  child.kill('SIGKILL');
+};
 
 const onChange = async (
   value: any,
@@ -108,6 +112,10 @@ const onChange = async (
   child.stderr.setEncoding('utf8');
 
   childs.push(child);
+
+  _.debounce(() => {
+    setPreviewOK(['']);
+  }, 10);
 
   // Set seconds max execution time
   // Protection from while(true)
