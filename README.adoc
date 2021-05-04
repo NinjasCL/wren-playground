@@ -6,7 +6,7 @@
 
 A simple playground for playing with https://wren.io[Wren]
 
-image::screenshot.gif[Screenshot]
+image:https://raw.githubusercontent.com/NinjasCL/wren-playground/main/screenshot.gif[Screenshot]
 
 ## Components
 
