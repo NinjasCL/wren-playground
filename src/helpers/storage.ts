@@ -18,9 +18,9 @@ export const STORAGE_MODE = 'mode';
 export const STORAGE_MAX_TIME = 'max-time'; // 3 seconds max execution time per script
 
 const getCustomWren = (
-  userData: string,
-  localBin: string,
-  localWren: string
+  userData: string
+  /* localBin: string, */
+  /* localWren: string */
 ) => {
   // Enable providing a custom wren executable in userData dir
   let customWren = Path.join(userData, 'wren');
